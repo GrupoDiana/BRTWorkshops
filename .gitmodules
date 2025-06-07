@@ -1,0 +1,3 @@
+[submodule "API_MO"]
+	path = API_MO
+	url = https://github.com/sofacoustics/API_MO.git
