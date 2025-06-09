@@ -1053,5 +1053,17 @@ classdef BeRTAOSCAPI
             %   normalization - Normalization type (string, e.g., 'SN3D', 'N3D').
             oscsend(obj.sender, '/listener/setAmbisonicsNormalization', 'ss', convertStringsToChars(listenerID), normalization);
         end
+
+
+        %% Send a Listener Enable NearFieldEffect command
+        function sendEnvironmentEnablePropagationDelay(obj, environmentModelID, enable)           
+            disp("Sending /environment/enablePropagationDelay ...");
+            oscsend(obj.sender, '/environment/enablePropagationDelay', 'sB', convertStringsToChars(environmentModelID), enable);
+        end
+
+        function [success, message] = sendEnvironmentEnablePropagationDelayAndWaitResult(obj, environmentModelID, enable)           
+            obj.sendEnvironmentEnablePropagationDelay(environmentModelID, enable);
+            [success, message] = obj.waitAndCheckControlActionResult("/environment/enablePropagationDelay ", listenerID);
+        end
     end
 end
