@@ -21,37 +21,51 @@ try
         throw(ME);        
     end  
           
-    %% Load HRTF  
-    myOSCConnection.sendRemoveHRTF("HRTF1");
+    % %% Load HRTF  
+    % myOSCConnection.sendRemoveHRTF("HRTF1");
+    % 
+     sofaPaths = "resources\HRTF\";    
+     sofaToBeUsed = "3DTI_HRTF_SADIE_II_D2_256s_48000Hz.sofa";
+     loadSofaSpatialResolution = 15;
+    % 
+    % [success, message] = myOSCConnection.sendLoadHRTFAndWaitResult("hrtf1", strcat(sofaPaths,sofaToBeUsed), loadSofaSpatialResolution); 
+    % disp(message);
+    % if (~success)
+    %     ME = MException('sendLoadHRTF', 'Error loading the HRTF');
+    %     throw(ME);
+    % end  
 
-    sofaPaths = "D:\Repos\3daudio\BRTWorkshops\resources\HRTF\";    
-    sofaToBeUsed = "3DTI_HRTF_SADIE_II_D2_256s_48000Hz.sofa";
-    loadSofaSpatialResolution = 15;
+    % %% Load NearField Effect filter
+    % sosFilterPath = "resources\SOSFilters\";    
+    % sosFilterToBeUsed = "NearFieldCompensation_ILD_1.2m_48Khz.sofa";
+    % [success, message] = myOSCConnection.sendLoadSOSFiltersAndWaitResult("NFFilters", strcat(sosFilterPath, sosFilterToBeUsed));
+    % disp(message);
+    % if (~success)
+    %     ME = MException('sendLoadSOSFilters','Error loading SOS filter');
+    %     throw(ME);
+    % end
     
-    [success, message] = myOSCConnection.sendLoadHRTFAndWaitResult("hrtf1", strcat(sofaPaths,sofaToBeUsed), loadSofaSpatialResolution); 
-    disp(message);
-    if (~success)
-        ME = MException('sendLoadHRTF', 'Error loading the HRTF');
-        throw(ME);
-    end  
-
-    %% Load NearField Effect filter
-    sosFilterPath = "resources\SOSFilters\";    
-    sosFilterToBeUsed = "NearFieldCompensation_ILD_1.2m_48Khz.sofa";
-    [success, message] = myOSCConnection.sendLoadSOSFiltersAndWaitResult("NFFilters", strcat(sosFilterPath, sosFilterToBeUsed));
-    disp(message);
-    if (~success)
-        ME = MException('sendLoadSOSFilters','Error loading SOS filter');
-        throw(ME);
-    end
-    
+    % %% CONFIGURE MODELS 
     [success, message] = myOSCConnection.sendListenerEnableNearFieldEffectAndWaitResult('DefaultListener', true);  
     disp(message);
     if (~success)
         ME = MException('sendListenerEnableNearFieldEffect','Error setting SOS filter into listener');
         throw(ME);
     end
-
+    
+    [success, message] = myOSCConnection.sendEnableModelAndWaitResult('FreeField', false);
+    disp(message);
+    if (~success)
+        ME = MException('sendEnableModel','Error when deactivating the model');
+        throw(ME);
+    end
+    
+    [success, message] = myOSCConnection.sendEnableModelAndWaitResult('ReverbPath', false);
+    disp(message);
+    if (~success)
+        ME = MException('sendEnableModel','EError when deactivating the model');
+        throw(ME);
+    end
 
     %% Load Sound Source (Impulse response) 
     myOSCConnection.sendRemoveAllSources();

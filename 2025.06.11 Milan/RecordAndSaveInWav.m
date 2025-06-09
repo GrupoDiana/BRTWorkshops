@@ -1,4 +1,4 @@
-function [success] = RecordAndSaveInWav(myOSCConnection, fileOutName, fileOutPath,  sourcelocations, fs, recordDurationLength, irLength, recordingMode) 
+function [success] = RecordAndSaveInWav(myOSCConnection, fileOutName, fileOutPath,  sourcelocations, fs, recordDurationLength, recordingMode) 
     try                                                                 
         % Recorres la matriz de localizaciones de la fuente
         irNumber =1;    
@@ -42,7 +42,7 @@ function [success] = RecordAndSaveInWav(myOSCConnection, fileOutName, fileOutPat
             wavFileName = sprintf(strcat(wavFileName,'__%s.wav'), datestr(now,'dd-mm-yyyy HH-MM'));                        
             wavFullFileName = fullfile(fileOutPath,wavFileName);
 
-            [success, wavFileName] = recordStereoWAV(wavFullFileName,recordData.Data.Receiver(1,(1:irLength)), recordData.Data.Receiver(2,(1:irLength)),str2double(fs), 24);
+            [success, wavFileName] = recordStereoWAV(wavFullFileName,recordData.Data.Receiver(1,:), recordData.Data.Receiver(2,:),str2double(fs), 16);
             if (~success)                
                 return;
             end
@@ -145,6 +145,7 @@ function [success, fileOutName] = recordStereoWAV(fullFilePath, leftChannelSampl
 
     try
         % Write the WAV file
+        %sound(audioData, 48000);
         audiowrite(fullFilePath, audioData, sampleRate, 'BitsPerSample', bitDepth);
         fprintf('WAV file "%s" created successfully with %d bits and %d Hz.\n', fullFilePath, bitDepth, sampleRate);
         success = true;

@@ -22,35 +22,51 @@ try
     end  
           
     %% Load HRTF  
-    myOSCConnection.sendRemoveHRTF("HRTF1");
+    % myOSCConnection.sendRemoveHRTF("HRTF1");
 
     sofaPaths = "resources\HRTF\";    
     sofaToBeUsed = "3DTI_HRTF_SADIE_II_D2_256s_48000Hz.sofa";
     loadSofaSpatialResolution = 5;
     
-    [success, message] = myOSCConnection.sendLoadHRTFAndWaitResult("hrtf1", strcat(sofaPaths,sofaToBeUsed), loadSofaSpatialResolution); 
-    disp(message);
-    if (~success)
-        ME = MException('sendLoadHRTF', 'Error loading the HRTF');
-        throw(ME);
-    end  
+    % [success, message] = myOSCConnection.sendLoadHRTFAndWaitResult("hrtf1", strcat(sofaPaths,sofaToBeUsed), loadSofaSpatialResolution); 
+    % disp(message);
+    % if (~success)
+    %     ME = MException('sendLoadHRTF', 'Error loading the HRTF');
+    %     throw(ME);
+    % end  
 
     %% Load NearField Effect filter
-    sosFilterPath = "resources\SOSFilters\";    
-    sosFilterToBeUsed = "NearFieldCompensation_ILD_1.2m_48Khz.sofa";
-    [success, message] = myOSCConnection.sendLoadSOSFiltersAndWaitResult("NFFilters", strcat(sosFilterPath, sosFilterToBeUsed));
-    disp(message);
-    if (~success)
-        ME = MException('sendLoadSOSFilters','Error loading SOS filter');
-        throw(ME);
-    end
-    
+    % sosFilterPath = "resources\SOSFilters\";    
+    % sosFilterToBeUsed = "NearFieldCompensation_ILD_1.2m_48Khz.sofa";
+    % [success, message] = myOSCConnection.sendLoadSOSFiltersAndWaitResult("NFFilters", strcat(sosFilterPath, sosFilterToBeUsed));
+    % disp(message);
+    % if (~success)
+    %     ME = MException('sendLoadSOSFilters','Error loading SOS filter');
+    %     throw(ME);
+    % end
+        
+    %% CONFIGURE MODELS 
     [success, message] = myOSCConnection.sendListenerEnableNearFieldEffectAndWaitResult('DefaultListener', true);  
     disp(message);
     if (~success)
         ME = MException('sendListenerEnableNearFieldEffect','Error setting SOS filter into listener');
         throw(ME);
     end
+    
+    [success, message] = myOSCConnection.sendEnableModelAndWaitResult('FreeField', true);
+    disp(message);
+    if (~success)
+        ME = MException('sendEnableModel','Error when deactivating the model');
+        throw(ME);
+    end
+    
+    [success, message] = myOSCConnection.sendEnableModelAndWaitResult('ReverbPath', true);
+    disp(message);
+    if (~success)
+        ME = MException('sendEnableModel','EError when deactivating the model');
+        throw(ME);
+    end
+
 
 
     %% Load Sound Source  
@@ -69,8 +85,7 @@ try
     fileOutPath = "C:\Users\Daniel\Desktop\temp\wavs\";
     
     listODistanceToSimulate = [0.2, 0.5];    
-    recordDurationLength = 1;  % seconds
-    irLength = 256;
+    recordDurationLength = 1;  % seconds    
     spatialResolution = 20;
     recordingMode = "offline"; %online or offline    
     fs = "48000";
@@ -83,7 +98,7 @@ try
         %fileOutName = strcat(sofaToBeUsedName, "_Sim_",num2str(distanceToSimulate),"m_NearField");
         fileOutName = strcat("Sim_",num2str(distanceToSimulate),"m_NearField");
         
-        [success] = RecordAndSaveInWav(myOSCConnection, fileOutName, fileOutPath, sourcelocations, fs, recordDurationLength, irLength , recordingMode);     
+        [success] = RecordAndSaveInWav(myOSCConnection, fileOutName, fileOutPath, sourcelocations, fs, recordDurationLength, recordingMode);     
         if (~success)
             ME = MException('RecordAndSaveInSofa', 'Error recording and save the SOFA file');
             throw(ME);
@@ -122,7 +137,7 @@ function sourceLocations = GetSphereSourceLocations(distanceToSimulate, spatialR
 
     % Create 1D arrays for azimuth and elevation values
     azimuth_vals = (0:spatialResolution:359)'; % Column vector
-    elevation_vals = (-90:spatialResolution:90)'; % Column vector
+    elevation_vals = (-70:spatialResolution:70)'; % Column vector
 
     % Use ndgrid to create 2D grids of all combinations of azimuth and elevation
     % The output `az` and `el` will be matrices where each element is a combination.

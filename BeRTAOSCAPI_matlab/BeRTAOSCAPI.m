@@ -611,6 +611,18 @@ classdef BeRTAOSCAPI
             [success, message] = obj.waitAndCheckControlActionResult("/record");
         end
 
+
+        %% Send a Enable Model command
+        function sendEnableModel(obj, modelID, enable)
+             disp("Sending /listener/enableModel...");
+            oscsend(obj.sender, '/enableModel', 'sB', convertStringsToChars(modelID), enable);
+        end
+        
+        function [success, message] = sendEnableModelAndWaitResult(obj, modelID, enable)            
+            obj.sendEnableModel(modelID, enable);
+            [success, message] = obj.waitAndCheckControlActionResult("/enableModel", modelID);
+        end
+
         %% Send a LoadHRTF command
         function sendLoadHRTF(obj, HRTFID, filename, samplingStep)
             %SENDLOADHRTF Sends a '/resources/loadHRTF' OSC command.
