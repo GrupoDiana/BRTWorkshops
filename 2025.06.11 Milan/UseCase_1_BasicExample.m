@@ -34,8 +34,31 @@ try
     %     ME = MException('sendLoadHRTF', 'Error loading the HRTF');
     %     throw(ME);
     % end  
+    %% CONFIGURE MODELS 
+    [success, message] = myOSCConnection.sendListenerEnableNearFieldEffectAndWaitResult('DefaultListener', true);  
+    disp(message);
+    if (~success)
+        ME = MException('sendListenerEnableNearFieldEffect','Error setting SOS filter into listener');
+        throw(ME);
+    end
+    
+    [success, message] = myOSCConnection.sendEnableModelAndWaitResult('FreeField', true);
+    disp(message);
+    if (~success)
+        ME = MException('sendEnableModel','Error when deactivating the model');
+        throw(ME);
+    end
+    
+    [success, message] = myOSCConnection.sendEnableModelAndWaitResult('ReverbPath', true);
+    disp(message);
+    if (~success)
+        ME = MException('sendEnableModel','EError when deactivating the model');
+        throw(ME);
+    end
+    
+    %% Load Sound Source      
+    myOSCConnection.sendRemoveAllSources();
 
-    %% Load Sound Source       
     sourcePath = "resources\";
     sourceFileToBeUsed = "MusArch_Sample_48kHz_Anechoic_FemaleSpeech.wav";
     [success, message] = myOSCConnection.sendLoadSourceAndWaitResult('source1', strcat(sourcePath, sourceFileToBeUsed),'SimpleModel');
@@ -45,7 +68,7 @@ try
         throw(ME);
     end  
     
-    %% Record ONLINE Loop
+    %% RECORDING ONLINE Loop
     recordingdFileName = 'C:\Users\Daniel\Desktop\temp\movingSource.mat';
     myOSCConnection.sendPlayAndRecord(recordingdFileName, 'mat', -1);
 
@@ -62,8 +85,8 @@ try
     [success, message] = myOSCConnection.waitAndCheckControlActionResult('/playAndRecord');
     disp(message);
    
-    %% RECORD OFFLINE
-    % filePath = 'C:\Users\Daniel\Desktop\temp';
+    %% RECORDING OFFLINE LOOP
+    % filePath = 'C:\Users\Daniel\Desktop\temp\';
     % 
     % azimuthList = linspace(90, -90, 5);    
     % for sourceIndex = 1:length(azimuthList)        
@@ -73,7 +96,7 @@ try
     %     [x,y,z] = sph2cart(deg2rad(currentAzimuth), deg2rad(currentElevation), currentDistance);
     %     myOSCConnection.sendSourceLocation('source1', x, y, z);
     % 
-    %     fileName = strcat(filePath, '\temp_azimuth_', num2str(currentAzimuth),'.mat');
+    %     fileName = strcat(filePath, 'fixedSource_azimuth_', num2str(currentAzimuth),'.mat');
     %     [success, message] = myOSCConnection.sendRecordAndWaitResult(fileName, 'mat', 10);
     %     disp(message);
     %     if (~success)

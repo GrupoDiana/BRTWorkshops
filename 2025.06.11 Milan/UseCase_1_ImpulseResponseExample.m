@@ -21,7 +21,7 @@ try
         throw(ME);        
     end  
           
-    % %% Load HRTF  
+    %% Load HRTF  
     % myOSCConnection.sendRemoveHRTF("HRTF1");
     % 
      sofaPaths = "resources\HRTF\";    
@@ -35,7 +35,7 @@ try
     %     throw(ME);
     % end  
 
-    % %% Load NearField Effect filter
+    %% Load NearField Effect filter
     % sosFilterPath = "resources\SOSFilters\";    
     % sosFilterToBeUsed = "NearFieldCompensation_ILD_1.2m_48Khz.sofa";
     % [success, message] = myOSCConnection.sendLoadSOSFiltersAndWaitResult("NFFilters", strcat(sosFilterPath, sosFilterToBeUsed));
@@ -45,7 +45,7 @@ try
     %     throw(ME);
     % end
     
-    % %% CONFIGURE MODELS 
+    %% CONFIGURE MODELS 
     [success, message] = myOSCConnection.sendListenerEnableNearFieldEffectAndWaitResult('DefaultListener', true);  
     disp(message);
     if (~success)
@@ -94,7 +94,7 @@ try
         sourcelocations = GetSphereSourceLocations(distanceToSimulate, spatialResolution);
         
         [sofaToBeUsedPath,sofaToBeUsedName, sofaToBeUsedExt] = fileparts(sofaToBeUsed);
-        fileOutName = strcat(sofaToBeUsedName, "_Sim_",num2str(distanceToSimulate),"m_NearField");
+        fileOutName = strcat(sofaToBeUsedName, "_Sim_",num2str(distanceToSimulate),"m_with_NearField");
 
         [success, fileOut] = RecordAndSaveInSofa(myOSCConnection, fileOutName, fileOutPath, sourcelocations, fs, recordDurationLength, irLength , recordingMode);     
         if (~success)
