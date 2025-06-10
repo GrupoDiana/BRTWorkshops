@@ -82,7 +82,7 @@ try
     end  
           
     %% RECORD LOOP    
-    fileOutPath = "C:\Users\Daniel\Desktop\temp\wavs\";
+    fileOutPath = "C:\Users\Daniel\Desktop\recordings\wavs\";
     
     listODistanceToSimulate = [0.2, 0.5];    
     recordDurationLength = 1;  % seconds    

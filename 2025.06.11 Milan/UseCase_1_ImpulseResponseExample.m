@@ -70,7 +70,7 @@ try
     %% Load Sound Source (Impulse response) 
     myOSCConnection.sendRemoveAllSources();
 
-    sourcePath = "D:\Repos\3daudio\BRTWorkshops\resources\AudioFiles\";
+    sourcePath = "C:\Repos\3DAudio\BRTWorkshops\resources\AudioFiles\";
     sourceFileToBeUsed = "impulse16bits48000hz.wav";
     [success, message] = myOSCConnection.sendLoadSourceAndWaitResult('source1', strcat(sourcePath, sourceFileToBeUsed),'SimpleModel');
     disp(message);
@@ -80,7 +80,7 @@ try
     end  
           
     %% RECORD LOOP    
-    fileOutPath = "C:\Users\Daniel\Desktop\temp\";
+    fileOutPath = "C:\Users\Daniel\Desktop\recordings\";
     
     listODistanceToSimulate = [0.2, 0.5];    
     recordDurationLength = 0.1;  % seconds

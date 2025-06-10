@@ -69,7 +69,7 @@ try
     end  
     
     %% RECORDING ONLINE Loop
-    recordingdFileName = 'C:\Users\Daniel\Desktop\temp\movingSource.mat';
+    recordingdFileName = 'C:\Users\Daniel\Desktop\recordings\movingSource.mat';
     myOSCConnection.sendPlayAndRecord(recordingdFileName, 'mat', -1);
 
     azimuthList = linspace(90, -90, 100);    
@@ -86,7 +86,7 @@ try
     disp(message);
    
     %% RECORDING OFFLINE LOOP
-    % filePath = 'C:\Users\Daniel\Desktop\temp\';
+    % filePath = 'C:\Users\Daniel\Desktop\recordings\';
     % 
     % azimuthList = linspace(90, -90, 5);    
     % for sourceIndex = 1:length(azimuthList)        
