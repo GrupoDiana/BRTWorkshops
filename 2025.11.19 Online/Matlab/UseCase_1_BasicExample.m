@@ -1,7 +1,7 @@
 try 
     clear all;
     clc;    
-    addpath("..\BeRTAOSCAPI_matlab\");    
+    addpath("..\..\BeRTAOSCAPI_matlab\");    
     
     %% Connect to BeRTA        
     % 1. Create an instance of the class (call constructor)    
@@ -59,10 +59,10 @@ try
     
     %% Load Sound Source      
     myOSCConnection.sendRemoveAllSources();
-    %sourcePath = "resources\";
-    %sourceFileToBeUsed = "MusArch_Sample_48kHz_Anechoic_FemaleSpeech.wav";    
-    sourcePath = strcat(fileparts(GetMyFolderPath()), '\resources\AudioFiles\');
-    sourceFileToBeUsed = "impulse16bits48000hz.wav";
+    sourcePath = "resources\";
+    sourceFileToBeUsed = "MusArch_Sample_48kHz_Anechoic_FemaleSpeech.wav";    
+    %sourcePath = strcat(fileparts(GetMyFolderPath()), '\..\resources\AudioFiles\');
+    %sourceFileToBeUsed = "impulse16bits48000hz.wav";
 
     [success, message] = myOSCConnection.sendLoadSourceAndWaitResult('source1', strcat(sourcePath, sourceFileToBeUsed),'OmnidirectionalModel');
     disp(message);
@@ -72,44 +72,44 @@ try
     end  
     
     %% RECORDING ONLINE Loop
-    % %recordingdFileName = 'C:\Users\Daniel\Desktop\recordings\movingSource.mat';
-    % recordingdFileName = 'movingSource.mat';
-    % recordingdFileNameFullPath = strcat(GetMyFolderPath(), '\recordings\', recordingdFileName); 
-    % 
-    % myOSCConnection.sendPlayAndRecord(recordingdFileNameFullPath, 'mat', -1);
-    % 
-    % azimuthList = linspace(90, -90, 100);    
-    % for sourceIndex = 1:length(azimuthList)        
-    %     currentAzimuth      = azimuthList(sourceIndex);
-    %     currentElevation    = 0;
-    %     currentDistance     = 2;
-    %     [x,y,z] = sph2cart(deg2rad(currentAzimuth), deg2rad(currentElevation), currentDistance);
-    %     myOSCConnection.sendSourceLocation('source1', x, y, z);
-    %     pause(0.1);
-    % end
-    % myOSCConnection.sendStop();
-    % [success, message] = myOSCConnection.waitAndCheckControlActionResult('/playAndRecord');
-    % disp(message);
-   
-    %% RECORDING OFFLINE LOOP    
-    filePath = strcat(GetMyFolderPath(), '\recordings\'); 
+    %recordingdFileName = 'C:\Users\Daniel\Desktop\recordings\movingSource.mat';
+    recordingdFileName = 'movingSource.mat';
+    recordingdFileNameFullPath = strcat(GetMyFolderPath(), '\recordings\', recordingdFileName); 
 
-    azimuthList = linspace(90, -90, 180);    
+    myOSCConnection.sendPlayAndRecord(recordingdFileNameFullPath, 'mat', -1);
+
+    azimuthList = linspace(90, -90, 100);    
     for sourceIndex = 1:length(azimuthList)        
         currentAzimuth      = azimuthList(sourceIndex);
         currentElevation    = 0;
         currentDistance     = 2;
         [x,y,z] = sph2cart(deg2rad(currentAzimuth), deg2rad(currentElevation), currentDistance);
         myOSCConnection.sendSourceLocation('source1', x, y, z);
-
-        fileName = strcat(filePath, 'fixedSource_azimuth_', num2str(currentAzimuth),'.mat');
-        [success, message] = myOSCConnection.sendRecordAndWaitResult(fileName, 'mat', 1);
-        disp(message);
-        if (~success)
-            ME = MException('sendRecordAndWaitResult', 'Error recording');
-            throw(ME);
-        end
+        pause(0.1);
     end
+    myOSCConnection.sendStop();
+    [success, message] = myOSCConnection.waitAndCheckControlActionResult('/playAndRecord');
+    disp(message);
+   
+    %% RECORDING OFFLINE LOOP    
+    % filePath = strcat(GetMyFolderPath(), '\recordings\'); 
+    % 
+    % azimuthList = linspace(90, -90, 180);    
+    % for sourceIndex = 1:length(azimuthList)        
+    %     currentAzimuth      = azimuthList(sourceIndex);
+    %     currentElevation    = 0;
+    %     currentDistance     = 2;
+    %     [x,y,z] = sph2cart(deg2rad(currentAzimuth), deg2rad(currentElevation), currentDistance);
+    %     myOSCConnection.sendSourceLocation('source1', x, y, z);
+    % 
+    %     fileName = strcat(filePath, 'fixedSource_azimuth_', num2str(currentAzimuth),'.mat');
+    %     [success, message] = myOSCConnection.sendRecordAndWaitResult(fileName, 'mat', 1);
+    %     disp(message);
+    %     if (~success)
+    %         ME = MException('sendRecordAndWaitResult', 'Error recording');
+    %         throw(ME);
+    %     end
+    % end
     
     % Disconnect and close osc sever
     myOSCConnection.sendControlDisconnect();        
