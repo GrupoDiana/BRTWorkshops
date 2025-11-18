@@ -1,0 +1,31 @@
+test: "Spatial_Attention"
+subject: "P99"
+data_dir: "C:/GitHubRepos/BRT_Spatial_Attention_Experiment/data/"
+practice: False
+brt_dir: "C:/Program Files/University of Malaga/BeRTA-Renderer App/BeRTA-Renderer.exe"
+brt_send_port: 10017
+brt_ip: 127.0.0.1
+brt_receive_port: 8000
+hrtf_dir: "C:/GitHubRepos/BRT_Spatial_Attention_Experiment/"
+hrtfs: 
+  - "sofa_1.sofa"
+  - "sofa_2.sofa"
+  - "sofa_3.sofa"
+crm_target_callsign: baron
+crm_callsigns:
+  - charlie
+  - ringo
+  - laker
+  - hopper
+  - tiger
+  - eagle
+repeats: 3
+target_locations: 
+  - -90
+  - 0
+  - 90
+masker_locations:
+  - -90
+  - 0
+  - 90
+number_of_maskers: 2
